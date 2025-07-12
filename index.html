@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Quest - Level Up Your Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Character Selection Modal */
+        .character-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .character-selection {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .character-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2a5298;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .character-option {
+            background: #f8f9fa;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .character-option:hover {
+            border-color: #2a5298;
+            transform: scale(1.05);
+        }
+
+        .character-option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+
+        .character-avatar {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .character-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Game Header */
+        .game-header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+
+        .player-avatar {
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+
+        .player-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .xp-bar {
+            width: 200px;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s ease;
+        }
+
+        .badges-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .badge.earned {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            animation: pulse 2s infinite;
+        }
+
+        .badge.locked {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Game Map */
+        .game-map {
+            padding: 2rem;
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .map-path {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .map-path::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #4CAF50, #2196F3, #9C27B0, #FF9800, #FFD700);
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        /* Quest Nodes */
+        .quest-node {
+            position: relative;
+            z-index: 2;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            border: 4px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quest-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .quest-node.completed {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+        }
+
+        .quest-node.active {
+            border-color: #2196F3;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .quest-node.locked {
+            border-color: #ccc;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(33, 150, 243, 0.3); }
+            to { box-shadow: 0 0 30px rgba(33, 150, 243, 0.6); }
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quest-icon {
+            font-size: 3rem;
+            background: rgba(42, 82, 152, 0.1);
+            padding: 1rem;
+            border-radius: 15px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+        }
+
+        .quest-xp {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .quest-status {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .quest-status.completed {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .quest-status.locked {
+            background: #ccc;
+            color: #666;
+        }
+
+        /* Mini-games and Activities */
+        .quest-activity {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid #2196F3;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .activity-card:hover {
+            border-color: #2196F3;
+            transform: translateY(-3px);
+        }
+
+        .activity-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .activity-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2a5298;
+        }
+
+        .activity-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .player-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .quest-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Character Selection Modal -->
+        <div class="character-modal" id="characterModal">
+            <div class="character-selection">
+                <h2 class="character-title">Choose Your AI Study Avatar</h2>
+                <p>Select your character to begin your learning quest!</p>
+                
+                <div class="character-grid">
+                    <div class="character-option" data-character="🤖" data-name="Tech Wizard">
+                        <div class="character-avatar">🤖</div>
+                        <div class="character-name">Tech Wizard</div>
+                    </div>
+                    <div class="character-option" data-character="🎮" data-name="Game Master">
+                        <div class="character-avatar">🎮</div>
+                        <div class="character-name">Game Master</div>
+                    </div>
+                    <div class="character-option" data-character="📚" data-name="Study Sage">
+                        <div class="character-avatar">📚</div>
+                        <div class="character-name">Study Sage</div>
+                    </div>
+                    <div class="character-option" data-character="⚡" data-name="Speed Learner">
+                        <div class="character-avatar">⚡</div>
+                        <div class="character-name">Speed Learner</div>
+                    </div>
+                    <div class="character-option" data-character="🎯" data-name="Focus Master">
+                        <div class="character-avatar">🎯</div>
+                        <div class="character-name">Focus Master</div>
+                    </div>
+                    <div class="character-option" data-character="🌟" data-name="Star Student">
+                        <div class="character-avatar">🌟</div>
+                        <div class="character-name">Star Student</div>
+                    </div>
+                </div>
+                
+                <button class="cta-button" id="startGameBtn" disabled>Start Your Quest!</button>
+            </div>
+        </div>
+
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="player-info">
+                <div class="player-avatar" id="playerAvatar">🤖</div>
+                <div class="player-stats">
+                    <div class="player-name" id="playerName">AI Study Hero</div>
+                    <div>Level <span id="playerLevel">1</span> • <span id="currentXP">0</span>/<span id="maxXP">100</span> XP</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xpFill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="badges-container">
+                <div class="badge locked" id="badge1" title="First Steps">🏁</div>
+                <div class="badge locked" id="badge2" title="Prompt Master">📝</div>
+                <div class="badge locked" id="badge3" title="Tool Explorer">🔧</div>
+                <div class="badge locked" id="badge4" title="Practice Pro">🏆</div>
+                <div class="badge locked" id="badge5" title="AI Champion">👑</div>
+            </div>
+        </div>
+
+        <!-- Game Map -->
+        <div class="game-map">
+            <div class="map-path">
+                <!-- Quest 1: Start -->
+                <div class="quest-node active" id="quest1" data-quest="1">
+                    <div class="quest-status completed">✓</div>
+                    <div class="quest-header">
+                        <div class="quest-icon">🚀</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Begin Your AI Journey</div>
+                            <div class="quest-xp">+50 XP</div>
+                        </div>
+                    </div>
+                    <p>Welcome to AI Study Quest! Ready to transform how you learn?</p>
+                    <button class="cta-button" onclick="completeQuest(1)">Start Adventure</button>
+                </div>
+
+                <!-- Quest 2: Prompts -->
+                <div class="quest-node locked" id="quest2" data-quest="2">
+                    <div class="quest-status locked">🔒</div>
+                    <div class="quest-header">
+                        <div class="quest-icon">🧠</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Master AI Prompts</div>
+                            <div class="quest-xp">+100 XP</div>
+                        </div>
+                    </div>
+                    <div class="quest-activity">
+                        <h4>🎮 Mini-Game: Prompt Builder</h4>
+                        <div class="activity-grid">
+                            <div class="activity-card" onclick="playPromptGame('core')">
+                                <div class="activity-icon">📋</div>
+                                <div class="activity-title">Core Concepts</div>
+                                <div class="activity-description">Learn to ask AI for clear explanations</div>
+                            </div>
+                            <div class="activity-card" onclick="playPromptGame('timeline')">
+                                <div class="activity-icon">⏰</div>
+                                <div class="activity-title">Study Timeline</div>
+                                <div class="activity-description">Generate personalized study schedules</div>
+                            </div>
+                            <div class="activity-card" onclick="playPromptGame('practice')">
+                                <div class="activity-icon">🏋️</div>
+                                <div class="activity-title">Practice Methods</div>
+                                <div class="activity-description">Create diverse practice exercises</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quest 3: Tools -->
+                <div class="quest-node locked" id="quest3" data-quest="3">
+                    <div class="quest-status locked">🔒</div>
+                    <div class="quest-header">
+                        <div class="quest-icon">🛠️</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Discover AI Study Tools</div>
+                            <div class="quest-xp">+150 XP</div>
+                        </div>
+                    </div>
+                    <div class="quest-activity">
+                        <h4>🎯 Tool Collection Challenge</h4>
+                        <div class="activity-grid">
+                            <div class="activity-card" onclick="collectTool('notebook')">
+                                <div class="activity-icon">📖</div>
+                                <div class="activity-title">NotebookLM</div>
+                                <div class="activity-description">Interactive study guides</div>
+                            </div>
+                            <div class="activity-card" onclick="collectTool('quizlet')">
+                                <div class="activity-icon">🃏</div>
+                                <div class="activity-title">Quizlet AI</div>
+                                <div class="activity-description">Smart flashcards</div>
+                            </div>
+                            <div class="activity-card" onclick="collectTool('claude')">
+                                <div class="activity-icon">🤖</div>
+                                <div class="activity-title">Claude AI</div>
+                                <div class="activity-description">Study partner</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quest 4: Practice -->
+                <div class="quest-node locked" id="quest4" data-quest="4">
+                    <div class="quest-status locked">🔒</div>
+                    <div class="quest-header">
+                        <div class="quest-icon">🎮</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Practice Arena</div>
+                            <div class="quest-xp">+200 XP</div>
+                        </div>
+                    </div>
+                    <div class="quest-activity">
+                        <h4>⚔️ Battle Test Your Knowledge</h4>
+                        <div class="activity-grid">
+                            <div class="activity-card" onclick="startBattle('quiz')">
+                                <div class="activity-icon">🧩</div>
+                                <div class="activity-title">Quiz Master</div>
+                                <div class="activity-description">Generate practice tests</div>
+                            </div>
+                            <div class="activity-card" onclick="startBattle('explain')">
+                                <div class="activity-icon">🎤</div>
+                                <div class="activity-title">Explain It Back</div>
+                                <div class="activity-description">Teach concepts to AI</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quest 5: Victory -->
+                <div class="quest-node locked" id="quest5" data-quest="5">
+                    <div class="quest-status locked">🔒</div>
+                    <div class="quest-header">
+                        <div class="quest-icon">👑</div>
+                        <div class="quest-info">
+                            <div class="quest-title">AI Study Champion</div>
+                            <div class="quest-xp">+500 XP</div>
+                        </div>
+                    </div>
+                    <p>🎉 Congratulations! You've mastered AI-powered studying!</p>
+                    <button class="cta-button" onclick="claimReward()">Claim Your Reward</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification" id="notification"></div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            currentQuest: 1,
+            completedQuests: [],
+            xp: 0,
+            level: 1,
+            character: {
+                avatar: '🤖',
+                name: 'AI Study Hero'
+            },
+            badges: [],
+            toolsCollected: []
+        };
+
+        // Character Selection
+        const characterOptions = document.querySelectorAll('.character-option');
+        const startGameBtn = document.getElementById('startGameBtn');
+        let selectedCharacter = null;
+
+        characterOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                characterOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedCharacter = {
+                    avatar: option.dataset.character,
+                    name: option.dataset.name
+                };
+                startGameBtn.disabled = false;
+            });
+        });
+
+        startGameBtn.addEventListener('click', () => {
+            if (selectedCharacter) {
+                gameState.character = selectedCharacter;
+                document.getElementById('playerAvatar').textContent = selectedCharacter.avatar;
+                document.getElementById('playerName').textContent = selectedCharacter.name;
+                document.getElementById('characterModal').style.display = 'none';
+                showNotification('Welcome to AI Study Quest! 🚀');
+            }
+        });
+
+        // Game Functions
+        function updateUI() {
+            document.getElementById('currentXP').textContent = gameState.xp;
+            document.getElementById('playerLevel').textContent = gameState.level;
+            
+            const maxXP = gameState.level * 100;
+            document.getElementById('maxXP').textContent = maxXP;
+            
+            const xpPercentage = (gameState.xp / maxXP) * 100;
+            document.getElementById('xpFill').style.width = xpPercentage + '%';
+            
+            // Update quest nodes
+            for (let i = 1; i <= 5; i++) {
+                const questNode = document.getElementById(`quest${i}`);
+                const questStatus = questNode.querySelector('.quest-status');
+                
+                if (gameState.completedQuests.includes(i)) {
+                    questNode.classList.remove('locked', 'active');
+                    questNode.classList.add('completed');
+                    questStatus.classList.remove('locked');
+                    questStatus.classList.add('completed');
+                    questStatus.textContent = '✓';
+                } else if (i === gameState.currentQuest) {
+                    questNode.classList.remove('locked', 'completed');
+                    questNode.classList.add('active');
+                } else if (i > gameState.currentQuest) {
+                    questNode.classList.add('locked');
+                }
+            }
+        }
+
+        function addXP(amount) {
+            gameState.xp += amount;
+            const maxXP = gameState.level * 100;
+            
+            if (gameState.xp >= maxXP) {
+                gameState.level++;
+                gameState.xp = 0;
+                showNotification(`🎉 Level Up! You're now level ${gameState.level}!`);
+            }
+            
+            updateUI();
+        }
+
+        function earnBadge(badgeId, name) {
+            if (!gameState.badges.includes(badgeId)) {
+                gameState.badges.push(badgeId);
+                const badge = document.getElementById(badgeId);
+                badge.classList.remove('locked');
+                badge.classList.add('earned');
+                showNotification(`🏆 Badge Earned: ${name}!`);
+            }
+        }
+
+        function completeQuest(questNumber) {
+            if (!gameState.completedQuests.includes(questNumber)) {
+                gameState.completedQuests.push(questNumber);
+                gameState.currentQuest = questNumber + 1;
+                
+                // Award XP and badges
+                const xpRewards = [50, 100, 150, 200, 500];
+                addXP(xpRewards[questNumber - 1]);
+                
+                if (questNumber === 1) earnBadge('badge1', 'First Steps');
+                if (questNumber === 2) earnBadge('badge2', 'Prompt Master');
+                if (questNumber === 3) earnBadge('badge3', 'Tool Explorer');
+                if (questNumber === 4) earnBadge('badge4', 'Practice Pro');
+                if (questNumber === 5) earnBadge('badge5', 'AI Champion');
+                
+                updateUI();
+                showNotification(`Quest ${questNumber} completed! 🎉`);
+            }
+        }
+
+        function playPromptGame(type) {
+            const prompts = {
+                core: "Explain quantum physics in simple terms with 3 examples",
+                timeline: "Create a 2-week study plan for calculus",
+                practice: "Generate 5 practice problems for algebra"
+            };
+            
+            showNotification(`🎮 Prompt Game: "${prompts[type]}"`);
+            setTimeout(() => {
+                completeQuest(2);
+            }, 2000);
+        }
+
+        function collectTool(toolName) {
+            if (!gameState.toolsCollected.includes(toolName)) {
+                gameState.toolsCollected.push(toolName);
+                showNotification(`🛠️ Tool Collected: ${toolName}!`);
+                
+                if (gameState.toolsCollected.length >= 3) {
+                    completeQuest(3);
+                }
+            }
+        }
+
+        function startBattle(battleType) {
+            showNotification(`⚔️ Starting ${battleType} battle!`);
+            setTimeout(() => {
+                completeQuest(4);
+            }, 2000);
+        }
+
+        function claimReward() {
+            showNotification('🎉 Congratulations! You are now an AI Study Champion!');
+            completeQuest(5);
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize game
+        updateUI();
+    </script>
+</body>
+</html>
