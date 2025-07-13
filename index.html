@@ -3,102 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Study Quest - Level Up Your Learning</title>
+    <title>ATL Command Center: Digital Architect Quest</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a; /* Deep black background */
             min-height: 100vh;
-            color: #333;
+            color: #e0e0e0; /* Light gray for general text */
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
+        /* Utility classes for neon glow effects */
+        .neon-red-text {
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
+        }
+        .neon-red-border {
+            box-shadow: 0 0 8px #ff0000, 0 0 15px #ff0000 inset;
+        }
+        .neon-blue-text {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+        }
+
+        /* General container styling */
         .game-container {
-            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Character Selection Modal */
-        .character-modal {
+        /* Landing Page */
+        .landing-page {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .landing-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 1.5rem;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .landing-subtitle {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+        }
+
+        /* Modal Styling */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        .character-selection {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
+        .modal-content {
+            background: #1a1a1a;
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 2.5rem;
             max-width: 600px;
             width: 90%;
             text-align: center;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+            animation: scaleIn 0.4s ease-out;
         }
 
-        .character-title {
-            font-size: 2rem;
+        .modal-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-description {
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-input {
+            width: calc(100% - 2rem);
+            padding: 0.8rem;
             margin-bottom: 1rem;
-            color: #2a5298;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+        .modal-input:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
         }
 
+        /* Styling for select dropdown */
+        .modal-select {
+            width: calc(100% - 2rem);
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            appearance: none; /* Remove default arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2C197.398L146.2%2C56.602L5.4%2C197.398z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 0.8rem top 50%;
+            background-size: 0.65em auto;
+        }
+        .modal-select:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
+        }
+        /* Ensure option text is visible */
+        .modal-select option {
+            background-color: #1a1a1a; /* Dark background for options */
+            color: #e0e0e0;
+        }
+
+
+        /* Character Selection */
         .character-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1.5rem;
             margin: 2rem 0;
         }
 
         .character-option {
-            background: #f8f9fa;
+            background: #2a2a2a;
             border: 3px solid transparent;
-            border-radius: 15px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .character-option:hover {
-            border-color: #2a5298;
-            transform: scale(1.05);
+            border-color: #ff0000;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.2);
         }
 
         .character-option.selected {
-            border-color: #4CAF50;
-            background: #e8f5e8;
+            border-color: #00ffff; /* Cyber blue for selected */
+            background: #3a0000;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
 
         .character-avatar {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
+            font-size: 3.5rem;
+            margin-bottom: 0.7rem;
         }
 
         .character-name {
             font-weight: bold;
-            color: #333;
+            color: #e0e0e0;
+            font-size: 1rem;
         }
 
         /* Game Header */
         .game-header {
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            border-bottom: 2px solid #333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .player-info {
@@ -109,77 +223,99 @@
         }
 
         .player-avatar {
-            font-size: 2.5rem;
-            background: rgba(255,255,255,0.2);
+            font-size: 2.8rem;
+            background: rgba(255, 0, 0, 0.2);
             border-radius: 50%;
-            padding: 0.5rem;
+            padding: 0.6rem;
+            border: 2px solid #ff0000;
         }
 
         .player-stats {
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.3rem;
         }
 
         .player-name {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
+            color: #ff0000;
         }
 
         .xp-bar {
-            width: 200px;
-            height: 10px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 5px;
+            width: 220px;
+            height: 12px;
+            background: #333;
+            border-radius: 6px;
             overflow: hidden;
+            border: 1px solid #555;
         }
 
         .xp-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            background: linear-gradient(90deg, #ff0000, #ff8c00); /* Red to Orange gradient */
             transition: width 0.5s ease;
+            border-radius: 6px;
         }
 
         .badges-container {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.7rem;
             flex-wrap: wrap;
         }
 
         .badge {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: #2a2a2a;
+            border: 2px solid #555;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             position: relative;
             transition: all 0.3s ease;
+            cursor: help; /* Indicates hoverable info */
         }
 
         .badge.earned {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            animation: pulse 2s infinite;
+            background: linear-gradient(45deg, #ff0000, #ff8c00);
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.3) inset;
+            animation: pulseGlow 2s infinite alternate;
         }
+
+        /* Specific style for the platinum badge */
+        .badge.platinum-earned {
+            background: linear-gradient(45deg, #FFD700, #FFA500); /* Gold/Orange for platinum */
+            border-color: #FFD700;
+            box-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700 inset, 0 0 40px rgba(255, 215, 0, 0.7); /* Stronger glow */
+            animation: pulseGlowGold 1.5s infinite alternate; /* New animation for gold */
+        }
+
+        /* Animation for when a badge is collected */
+        @keyframes badgePop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff inset; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .badge.pop-animation {
+            animation: badgePop 0.5s ease-out;
+        }
+
 
         .badge.locked {
-            opacity: 0.3;
+            opacity: 0.4;
             filter: grayscale(100%);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
         }
 
         /* Game Map */
         .game-map {
-            padding: 2rem;
+            padding: 3rem 2rem;
             position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 1000px;
+            margin: 2rem auto;
         }
 
         .map-path {
@@ -187,7 +323,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4rem;
+            gap: 5rem; /* Increased gap for better spacing */
         }
 
         .map-path::before {
@@ -196,10 +332,10 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 6px;
+            width: 8px; /* Thicker path */
             height: 100%;
-            background: linear-gradient(180deg, #4CAF50, #2196F3, #9C27B0, #FF9800, #FFD700);
-            border-radius: 3px;
+            background: linear-gradient(180deg, #ff0000, #8b0000, #333333); /* Red to dark gray path */
+            border-radius: 4px;
             z-index: 1;
         }
 
@@ -207,55 +343,62 @@
         .quest-node {
             position: relative;
             z-index: 2;
-            background: white;
+            background: #1a1a1a;
             border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 600px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 650px;
             width: 100%;
-            border: 4px solid;
+            border: 3px solid #333;
             transition: all 0.3s ease;
             cursor: pointer;
+            color: #e0e0e0;
         }
 
-        .quest-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        .quest-node:hover:not(.locked) {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border-color: #ff0000;
         }
 
         .quest-node.completed {
-            border-color: #4CAF50;
-            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-color: #008000; /* Green for completed */
+            background: linear-gradient(135deg, #0a1a0a, #003300);
+            box-shadow: 0 0 15px rgba(0, 128, 0, 0.5);
         }
 
         .quest-node.active {
-            border-color: #2196F3;
-            animation: glow 2s ease-in-out infinite alternate;
+            border-color: #ff0000;
+            animation: pulseBorder 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
         }
 
         .quest-node.locked {
-            border-color: #ccc;
-            opacity: 0.6;
+            border-color: #333;
+            opacity: 0.5;
             cursor: not-allowed;
+            filter: grayscale(80%);
         }
 
-        @keyframes glow {
-            from { box-shadow: 0 0 20px rgba(33, 150, 243, 0.3); }
-            to { box-shadow: 0 0 30px rgba(33, 150, 243, 0.6); }
+        @keyframes pulseBorder {
+            from { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+            to { border-color: #ff8c00; box-shadow: 0 0 30px rgba(255, 140, 0, 0.6); }
         }
 
         .quest-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .quest-icon {
-            font-size: 3rem;
-            background: rgba(42, 82, 152, 0.1);
+            font-size: 3.5rem;
+            background: rgba(255, 0, 0, 0.15);
             padding: 1rem;
-            border-radius: 15px;
+            border-radius: 18px;
+            border: 1px solid #ff0000;
+            color: #ff0000;
         }
 
         .quest-info {
@@ -263,91 +406,116 @@
         }
 
         .quest-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #2a5298;
-            margin-bottom: 0.5rem;
+            color: #ff0000;
+            margin-bottom: 0.6rem;
         }
 
         .quest-xp {
-            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            background: linear-gradient(45deg, #00ff00, #00cc00); /* Green for XP */
             color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: 0.4rem 1rem;
+            border-radius: 25px;
+            font-size: 1rem;
             font-weight: bold;
+            display: inline-block;
         }
 
         .quest-status {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 40px;
-            height: 40px;
+            top: -15px;
+            right: -15px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .quest-status.completed {
-            background: #4CAF50;
-            color: white;
+            background: #008000; /* Darker green for completed status */
         }
 
         .quest-status.locked {
-            background: #ccc;
-            color: #666;
+            background: #333;
+            color: #888;
         }
 
         /* Mini-games and Activities */
         .quest-activity {
-            background: #f8f9fa;
+            background: #0a0a0a;
             border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            border-left: 4px solid #2196F3;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            border-left: 5px solid #00ffff; /* Neon blue accent */
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
         }
 
         .activity-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
         .activity-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 1.8rem;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 2px solid #333;
+            color: #e0e0e0;
         }
 
         .activity-card:hover {
-            border-color: #2196F3;
-            transform: translateY(-3px);
+            border-color: #00ffff;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
         }
 
         .activity-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            color: #00ffff; /* Neon blue icon */
         }
 
         .activity-title {
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #2a5298;
+            margin-bottom: 0.6rem;
+            color: #ff0000;
+            font-size: 1.1rem;
         }
 
         .activity-description {
             font-size: 0.9rem;
-            color: #666;
-            line-height: 1.4;
+            color: #b0b0b0;
+            line-height: 1.5;
+        }
+
+        /* Prompt Library Styling */
+        .prompt-library {
+            background: #000;
+            border: 1px solid #ff0000;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #00ff00; /* Green for code-like text */
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-break: break-word; /* Break long words */
+            max-height: 300px; /* Limit height for scrollability */
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
         }
 
         /* Notifications */
@@ -355,243 +523,344 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #4CAF50;
+            background: linear-gradient(90deg, #ff0000, #8b0000);
             color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            padding: 1rem 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             z-index: 1001;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+            transform: translateX(120%);
+            transition: transform 0.4s ease-out;
+            border: 1px solid #ff8c00;
         }
 
         .notification.show {
             transform: translateX(0);
         }
 
+        /* Call to Action Button */
         .cta-button {
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            background: linear-gradient(45deg, #ff0000, #cc0000);
             color: white;
             border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-size: 1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .cta-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.5);
+            background: linear-gradient(45deg, #ff3333, #e60000);
         }
 
         .cta-button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            background: #555;
+            box-shadow: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; }
+            50% { text-shadow: 0 0 15px #ff0000, 0 0 25px #ff0000; }
+            100% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; }
+        }
+
+        @keyframes pulseGlowGold {
+            0% { box-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700 inset, 0 0 40px rgba(255, 215, 0, 0.7); }
+            50% { box-shadow: 0 0 25px #FFD700, 0 0 45px #FFD700 inset, 0 0 60px rgba(255, 215, 0, 0.9); }
+            100% { box-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700 inset, 0 0 40px rgba(255, 215, 0, 0.7); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .landing-title {
+                font-size: 2.5rem;
+            }
+            .landing-subtitle {
+                font-size: 1.2rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.8rem;
+            }
             .game-header {
                 flex-direction: column;
                 text-align: center;
+                padding: 1rem;
             }
-            
             .player-info {
                 flex-direction: column;
                 text-align: center;
             }
-            
+            .xp-bar {
+                width: 180px;
+            }
+            .badges-container {
+                justify-content: center;
+            }
+            .quest-node {
+                padding: 1.8rem;
+            }
             .quest-header {
                 flex-direction: column;
                 text-align: center;
+                gap: 1rem;
+            }
+            .quest-icon {
+                font-size: 3rem;
+            }
+            .quest-title {
+                font-size: 1.4rem;
+            }
+            .activity-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <!-- Character Selection Modal -->
-        <div class="character-modal" id="characterModal">
-            <div class="character-selection">
-                <h2 class="character-title">Choose Your AI Study Avatar</h2>
-                <p>Select your character to begin your learning quest!</p>
-                
-                <div class="character-grid">
-                    <div class="character-option" data-character="🤖" data-name="Tech Wizard">
-                        <div class="character-avatar">🤖</div>
-                        <div class="character-name">Tech Wizard</div>
-                    </div>
-                    <div class="character-option" data-character="🎮" data-name="Game Master">
-                        <div class="character-avatar">🎮</div>
-                        <div class="character-name">Game Master</div>
-                    </div>
-                    <div class="character-option" data-character="📚" data-name="Study Sage">
-                        <div class="character-avatar">📚</div>
-                        <div class="character-name">Study Sage</div>
-                    </div>
-                    <div class="character-option" data-character="⚡" data-name="Speed Learner">
-                        <div class="character-avatar">⚡</div>
-                        <div class="character-name">Speed Learner</div>
-                    </div>
-                    <div class="character-option" data-character="🎯" data-name="Focus Master">
-                        <div class="character-avatar">🎯</div>
-                        <div class="character-name">Focus Master</div>
-                    </div>
-                    <div class="character-option" data-character="🌟" data-name="Star Student">
-                        <div class="character-avatar">🌟</div>
-                        <div class="character-name">Star Student</div>
-                    </div>
-                </div>
-                
-                <button class="cta-button" id="startGameBtn" disabled>Start Your Quest!</button>
+        <!-- Landing Page -->
+        <div class="landing-page" id="landingPage">
+            <h1 class="landing-title neon-red-text">THE DATA STREAMS ARE CORRUPTED.</h1>
+            <h2 class="landing-subtitle">A.T.L. COMMAND CENTER IS CALLING. Your mission, should you choose to accept it, is to become a Digital Architect. The future of knowledge depends on your code.</h2>
+            <button class="cta-button" id="acceptMissionBtn">ACCEPT MISSION</button>
+        </div>
+
+        <!-- User Data Collection Modal -->
+        <div class="modal-overlay hidden" id="userDataModal">
+            <div class="modal-content">
+                <h2 class="modal-title">IDENTIFY YOURSELF, ARCHITECT.</h2>
+                <p class="modal-description">The ATL Command Center requires your biometric data to grant you clearance. Tell us about yourself to sync your objectives and begin your training.</p>
+                <input type="text" id="userNameInput" class="modal-input" placeholder="Your Architect Name" required>
+                <input type="email" id="userEmailInput" class="modal-input" placeholder="Your Secure Email" required>
+                <input type="number" id="userAgeInput" class="modal-input" placeholder="Your Age" min="1" max="120" required>
+                <select id="userStudentStatusInput" class="modal-select" required>
+                    <option value="" disabled selected>Select Student Status</option>
+                    <option value="k-12">K-12</option>
+                    <option value="college">College</option>
+                    <option value="graduate">Graduate Student</option>
+                    <option value="not-student">Not a Student</option>
+                </select>
+                <input type="text" id="userCityInput" class="modal-input" placeholder="Your City (e.g., Atlanta, GA)" required>
+                <button class="cta-button" id="syncAndDeployBtn">SYNC & DEPLOY</button>
             </div>
         </div>
 
-        <!-- Game Header -->
-        <div class="game-header">
+        <!-- Character Selection Modal -->
+        <div class="modal-overlay hidden" id="characterModal">
+            <div class="modal-content">
+                <h2 class="modal-title">CHOOSE YOUR ARCHITECT PERSONA</h2>
+                <p class="modal-description">Select your digital avatar to begin your crucial mission!</p>
+                
+                <div class="character-grid">
+                    <div class="character-option" data-character="💻" data-name="Code Whisperer">
+                        <div class="character-avatar">💻</div>
+                        <div class="character-name">Code Whisperer</div>
+                    </div>
+                    <div class="character-option" data-character="🧠" data-name="Data Seeker">
+                        <div class="character-avatar">🧠</div>
+                        <div class="character-name">Data Seeker</div>
+                    </div>
+                    <div class="character-option" data-character="⚡" data-name="Circuit Breaker">
+                        <div class="character-avatar">⚡</div>
+                        <div class="character-name">Circuit Breaker</div>
+                    </div>
+                    <div class="character-option" data-character="🛡️" data-name="Protocol Guardian">
+                        <div class="character-avatar">🛡️</div>
+                        <div class="character-name">Protocol Guardian</div>
+                    </div>
+                    <div class="character-option" data-character="📡" data-name="Signal Weaver">
+                        <div class="character-avatar">📡</div>
+                        <div class="character-name">Cosmic Compiler</div>
+                    </div>
+                    <div class="character-option" data-character="🌌" data-name="Cosmic Compiler">
+                        <div class="character-avatar">🌌</div>
+                        <div class="character-name">Cosmic Compiler</div>
+                    </div>
+                </div>
+                
+                <button class="cta-button" id="startGameBtn" disabled>INITIATE QUEST!</button>
+            </div>
+        </div>
+
+        <!-- Game Header (Hidden until game starts) -->
+        <div class="game-header hidden" id="gameHeader">
             <div class="player-info">
-                <div class="player-avatar" id="playerAvatar">🤖</div>
+                <div class="player-avatar" id="playerAvatar">💻</div>
                 <div class="player-stats">
-                    <div class="player-name" id="playerName">AI Study Hero</div>
-                    <div>Level <span id="playerLevel">1</span> • <span id="currentXP">0</span>/<span id="maxXP">100</span> XP</div>
+                    <div class="player-name" id="playerName">Digital Architect</div>
+                    <div class="text-sm text-gray-400">Level <span id="playerLevel">1</span> • <span id="currentXP">0</span>/<span id="maxXP">100</span> XP</div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpFill"></div>
                     </div>
                 </div>
             </div>
             
-            <div class="badges-container">
-                <div class="badge locked" id="badge1" title="First Steps">🏁</div>
-                <div class="badge locked" id="badge2" title="Prompt Master">📝</div>
-                <div class="badge locked" id="badge3" title="Tool Explorer">🔧</div>
-                <div class="badge locked" id="badge4" title="Practice Pro">🏆</div>
-                <div class="badge locked" id="badge5" title="AI Champion">👑</div>
+            <div class="badges-container" id="badgesContainer">
+                <!-- Badges will be dynamically loaded here -->
             </div>
         </div>
 
-        <!-- Game Map -->
-        <div class="game-map">
+        <!-- Game Map (Hidden until game starts) -->
+        <div class="game-map hidden" id="gameMap">
             <div class="map-path">
-                <!-- Quest 1: Start -->
+                <!-- Quest 1: Begin Your AI Journey -->
                 <div class="quest-node active" id="quest1" data-quest="1">
                     <div class="quest-status completed">✓</div>
                     <div class="quest-header">
                         <div class="quest-icon">🚀</div>
                         <div class="quest-info">
-                            <div class="quest-title">Begin Your AI Journey</div>
+                            <div class="quest-title">MISSION: REBOOT REALITY</div>
                             <div class="quest-xp">+50 XP</div>
                         </div>
                     </div>
-                    <p>Welcome to AI Study Quest! Ready to transform how you learn?</p>
-                    <button class="cta-button" onclick="completeQuest(1)">Start Adventure</button>
+                    <p class="text-gray-300">Welcome, Architect! The digital underworld awaits. Prepare to restore corrupted data streams and rebuild the foundation of knowledge.</p>
+                    <button class="cta-button" onclick="completeQuest(1)">ACCEPT MISSION</button>
                 </div>
 
-                <!-- Quest 2: Prompts -->
+                <!-- Quest 2: Ace a Test - Prompt Library -->
                 <div class="quest-node locked" id="quest2" data-quest="2">
                     <div class="quest-status locked">🔒</div>
                     <div class="quest-header">
-                        <div class="quest-icon">🧠</div>
+                        <div class="quest-icon">📝</div>
                         <div class="quest-info">
-                            <div class="quest-title">Master AI Prompts</div>
+                            <div class="quest-title">PATHWAY: ACE A TEST - STEP 1: PROMPT LIBRARY</div>
                             <div class="quest-xp">+100 XP</div>
                         </div>
                     </div>
+                    <p class="text-gray-300">Your first step to acing any test: master the art of asking AI the right questions. Open your favorite LLM and try these prompts to get started:</p>
                     <div class="quest-activity">
-                        <h4>🎮 Mini-Game: Prompt Builder</h4>
-                        <div class="activity-grid">
-                            <div class="activity-card" onclick="playPromptGame('core')">
-                                <div class="activity-icon">📋</div>
-                                <div class="activity-title">Core Concepts</div>
-                                <div class="activity-description">Learn to ask AI for clear explanations</div>
-                            </div>
-                            <div class="activity-card" onclick="playPromptGame('timeline')">
-                                <div class="activity-icon">⏰</div>
-                                <div class="activity-title">Study Timeline</div>
-                                <div class="activity-description">Generate personalized study schedules</div>
-                            </div>
-                            <div class="activity-card" onclick="playPromptGame('practice')">
-                                <div class="activity-icon">🏋️</div>
-                                <div class="activity-title">Practice Methods</div>
-                                <div class="activity-description">Create diverse practice exercises</div>
-                            </div>
+                        <h4 class="text-xl font-bold text-red-500 mb-4">PROMPT LIBRARY: YOUR COMMAND CODES</h4>
+                        <div class="prompt-library">
+                            <p class="text-red-300">1. Core Concepts</p>
+                            <p>“What are the top 10 most tested concepts in [AP US History Unit 3]?”</p>
+                            <p>“Summarize the core concepts I need to know from this document” (paste class notes)</p>
+                            <p>“What are the most common misconceptions about [stoichiometry]?”</p>
+                            <br>
+                            <p class="text-red-300">2. Study Timelines</p>
+                            <p>“I have [5] days until my [biology] test. Make me a day-to-day study plan with focus topics and rest breaks.”</p>
+                            <p>“Make me a spaced repetition calendar for learning these [8] concepts.”</p>
+                            <p>“What’s the best way to study for this if I only have [1 hour] a day?”</p>
+                            <p>“I procrastinated and my test is tomorrow. Give me an optimized cram plan.”</p>
+                            <br>
+                            <p class="text-red-300">3. Practice Methods</p>
+                            <p>“Give me the most productive way to study [algebra/history/Spanish...]”</p>
+                            <p>“Generate a [10-minute] study session with [3] tasks to reinforce [topic].”</p>
+                            <p>“I want to focus on [memory/comprehension...]. How should I study? Be specific.”</p>
                         </div>
+                        <button class="cta-button" onclick="completeQuest(2)">CONGRATS! SURVIVED STEP 1</button>
                     </div>
                 </div>
 
-                <!-- Quest 3: Tools -->
+                <!-- Quest 3: Ace a Test - Use Tools to Study Smarter -->
                 <div class="quest-node locked" id="quest3" data-quest="3">
                     <div class="quest-status locked">🔒</div>
                     <div class="quest-header">
                         <div class="quest-icon">🛠️</div>
                         <div class="quest-info">
-                            <div class="quest-title">Discover AI Study Tools</div>
+                            <div class="quest-title">PATHWAY: ACE A TEST - STEP 2: DEPLOY SMART TOOLS</div>
                             <div class="quest-xp">+150 XP</div>
                         </div>
                     </div>
+                    <p class="text-gray-300">The Glitch adapts. You must deploy advanced AI tools to counter its corruption and study smarter.</p>
                     <div class="quest-activity">
-                        <h4>🎯 Tool Collection Challenge</h4>
+                        <h4 class="text-xl font-bold text-red-500 mb-4">AI TOOL LIBRARY: YOUR ARSENAL</h4>
                         <div class="activity-grid">
-                            <div class="activity-card" onclick="collectTool('notebook')">
+                            <div class="activity-card" onclick="collectTool('notebooklm')">
                                 <div class="activity-icon">📖</div>
                                 <div class="activity-title">NotebookLM</div>
-                                <div class="activity-description">Interactive study guides</div>
+                                <div class="activity-description">Upload docs, ask questions, get cited answers, generate podcasts.</div>
                             </div>
-                            <div class="activity-card" onclick="collectTool('quizlet')">
-                                <div class="activity-icon">🃏</div>
-                                <div class="activity-title">Quizlet AI</div>
-                                <div class="activity-description">Smart flashcards</div>
+                            <div class="activity-card" onclick="collectTool('brainscape')">
+                                <div class="activity-icon">🧠</div>
+                                <div class="activity-title">Brainscape</div>
+                                <div class="activity-description">Create/study flashcards, access expert decks, learn with spaced repetition.</div>
                             </div>
-                            <div class="activity-card" onclick="collectTool('claude')">
+                            <div class="activity-card" onclick="collectTool('khanmigo')">
                                 <div class="activity-icon">🤖</div>
-                                <div class="activity-title">Claude AI</div>
-                                <div class="activity-description">Study partner</div>
+                                <div class="activity-title">Khanmigo</div>
+                                <div class="activity-description">Your personalized tutor: hints, feedback, and support, not just answers.</div>
                             </div>
                         </div>
+                        <button class="cta-button" onclick="completeQuest(3)">CONGRATS! SURVIVED STEP 2</button>
                     </div>
                 </div>
 
-                <!-- Quest 4: Practice -->
+                <!-- Quest 4: Ace a Test - Test Yourself -->
                 <div class="quest-node locked" id="quest4" data-quest="4">
                     <div class="quest-status locked">🔒</div>
                     <div class="quest-header">
-                        <div class="quest-icon">🎮</div>
+                        <div class="quest-icon">⚔️</div>
                         <div class="quest-info">
-                            <div class="quest-title">Practice Arena</div>
+                            <div class="quest-title">PATHWAY: ACE A TEST - STEP 3: TEST YOURSELF</div>
                             <div class="quest-xp">+200 XP</div>
                         </div>
                     </div>
+                    <p class="text-gray-300">It's time to face the data anomalies head-on! Test your knowledge and identify your weak points.</p>
                     <div class="quest-activity">
-                        <h4>⚔️ Battle Test Your Knowledge</h4>
+                        <h4 class="text-xl font-bold text-red-500 mb-4">BATTLE SIMULATION: PROMPT LIBRARY</h4>
+                        <div class="prompt-library">
+                            <p>“Generate 25 MCQ practice questions based on my notes and give me the answers at the end.”</p>
+                            <p>“Ask me the 10 hardest open-ended questions you can think of about [photosynthesis] and criticize my response.”</p>
+                            <p>“You are a [history] professor. Generate 3 short essay prompts about [the Cold War]. Annotate and grade my response.”</p>
+                        </div>
+                        <h4 class="text-xl font-bold text-red-500 mt-6 mb-4">AI TOOL LIBRARY: COMBAT SUPPORT</h4>
                         <div class="activity-grid">
-                            <div class="activity-card" onclick="startBattle('quiz')">
-                                <div class="activity-icon">🧩</div>
-                                <div class="activity-title">Quiz Master</div>
-                                <div class="activity-description">Generate practice tests</div>
+                            <div class="activity-card" onclick="startBattle('studygenie')">
+                                <div class="activity-icon">💡</div>
+                                <div class="activity-title">Study Genie</div>
+                                <div class="activity-description">Create flashcards/quizzes from notes, get personalized analysis.</div>
                             </div>
-                            <div class="activity-card" onclick="startBattle('explain')">
-                                <div class="activity-icon">🎤</div>
-                                <div class="activity-title">Explain It Back</div>
-                                <div class="activity-description">Teach concepts to AI</div>
+                            <div class="activity-card" onclick="startBattle('conkerai')">
+                                <div class="activity-icon">🧩</div>
+                                <div class="activity-title">ConkerAI</div>
+                                <div class="activity-description">Automatic quiz creation from text: multiple choice, fill-in-the-blank, true/false.</div>
+                            </div>
+                            <div class="activity-card" onclick="startBattle('feynmanai')">
+                                <div class="activity-icon">⚛️</div>
+                                <div class="activity-title">FeynmanAI</div>
+                                <div class="activity-description">Create mind maps, quizzes, flashcards from audio/PDF. Use Feynman technique to memorize.</div>
                             </div>
                         </div>
+                        <button class="cta-button" onclick="completeQuest(4)">CONGRATS! SURVIVED STEP 3</button>
                     </div>
                 </div>
 
-                <!-- Quest 5: Victory -->
+                <!-- Quest 5: Ace a Test - Complete the Pathway -->
                 <div class="quest-node locked" id="quest5" data-quest="5">
                     <div class="quest-status locked">🔒</div>
                     <div class="quest-header">
-                        <div class="quest-icon">👑</div>
+                        <div class="quest-icon">🏅</div>
                         <div class="quest-info">
-                            <div class="quest-title">AI Study Champion</div>
+                            <div class="quest-title">PATHWAY: ACE A TEST - STEP 4: FINAL VICTORY!</div>
                             <div class="quest-xp">+500 XP</div>
                         </div>
                     </div>
-                    <p>🎉 Congratulations! You've mastered AI-powered studying!</p>
-                    <button class="cta-button" onclick="claimReward()">Claim Your Reward</button>
+                    <p class="text-gray-300">🎉 Congratulations, Digital Architect! You have successfully navigated the "Ace a Test" pathway and are ready to conquer any exam. Fill out this feedback form to earn your ultimate reward!</p>
+                    <button class="cta-button" onclick="claimReward()">CLAIM PLATINUM PATHWAY BADGE</button>
                 </div>
             </div>
         </div>
@@ -608,18 +877,95 @@
             xp: 0,
             level: 1,
             character: {
-                avatar: '🤖',
-                name: 'AI Study Hero'
+                avatar: '💻',
+                name: 'Digital Architect'
             },
             badges: [],
-            toolsCollected: []
+            toolsCollected: [],
+            userName: '',
+            userEmail: '',
+            userAge: null,
+            userStudentStatus: '',
+            userCity: ''
         };
 
-        // Character Selection
+        // DOM Elements
+        const landingPage = document.getElementById('landingPage');
+        const acceptMissionBtn = document.getElementById('acceptMissionBtn');
+        const userDataModal = document.getElementById('userDataModal');
+        const userNameInput = document.getElementById('userNameInput');
+        const userEmailInput = document.getElementById('userEmailInput');
+        const userAgeInput = document.getElementById('userAgeInput');
+        const userStudentStatusInput = document.getElementById('userStudentStatusInput');
+        const userCityInput = document.getElementById('userCityInput');
+        const syncAndDeployBtn = document.getElementById('syncAndDeployBtn');
+        const characterModal = document.getElementById('characterModal');
         const characterOptions = document.querySelectorAll('.character-option');
         const startGameBtn = document.getElementById('startGameBtn');
-        let selectedCharacter = null;
+        const gameHeader = document.getElementById('gameHeader');
+        const gameMap = document.getElementById('gameMap');
+        const playerAvatar = document.getElementById('playerAvatar');
+        const playerName = document.getElementById('playerName');
+        const playerLevel = document.getElementById('playerLevel');
+        const currentXP = document.getElementById('currentXP');
+        const maxXP = document.getElementById('maxXP');
+        const xpFill = document.getElementById('xpFill');
+        const badgesContainer = document.getElementById('badgesContainer');
+        const notification = document.getElementById('notification');
 
+        // Initial Load: Show Landing Page
+        document.addEventListener('DOMContentLoaded', () => {
+            landingPage.classList.remove('hidden');
+            gameHeader.classList.add('hidden');
+            gameMap.classList.add('hidden');
+            userDataModal.classList.add('hidden');
+            characterModal.classList.add('hidden');
+            updateUI(); // Initial UI update to set default values
+        });
+
+        // Landing Page Button
+        acceptMissionBtn.addEventListener('click', () => {
+            landingPage.classList.add('hidden');
+            userDataModal.classList.remove('hidden');
+        });
+
+        // User Data Collection
+        syncAndDeployBtn.addEventListener('click', () => {
+            const name = userNameInput.value.trim();
+            const email = userEmailInput.value.trim();
+            const age = parseInt(userAgeInput.value.trim());
+            const studentStatus = userStudentStatusInput.value;
+            const city = userCityInput.value.trim();
+
+            if (name && email && validateEmail(email) && !isNaN(age) && age > 0 && studentStatus && city) {
+                gameState.userName = name;
+                gameState.userEmail = email;
+                gameState.userAge = age;
+                gameState.userStudentStatus = studentStatus;
+                gameState.userCity = city;
+
+                console.log('User Data Collected:', {
+                    name: gameState.userName,
+                    email: gameState.userEmail,
+                    age: gameState.userAge,
+                    studentStatus: gameState.userStudentStatus,
+                    city: gameState.userCity
+                }); // For mock-up, log to console
+
+                userDataModal.classList.add('hidden');
+                characterModal.classList.remove('hidden');
+            } else {
+                showNotification('Architect, your data is corrupted! Please fill in all fields correctly.', 'error');
+            }
+        });
+
+        function validateEmail(email) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        // Character Selection
+        let selectedCharacter = null;
         characterOptions.forEach(option => {
             option.addEventListener('click', () => {
                 characterOptions.forEach(opt => opt.classList.remove('selected'));
@@ -635,27 +981,36 @@
         startGameBtn.addEventListener('click', () => {
             if (selectedCharacter) {
                 gameState.character = selectedCharacter;
-                document.getElementById('playerAvatar').textContent = selectedCharacter.avatar;
-                document.getElementById('playerName').textContent = selectedCharacter.name;
-                document.getElementById('characterModal').style.display = 'none';
-                showNotification('Welcome to AI Study Quest! 🚀');
+                playerAvatar.textContent = selectedCharacter.avatar;
+                playerName.textContent = selectedCharacter.name;
+                characterModal.classList.add('hidden');
+                gameHeader.classList.remove('hidden');
+                gameMap.classList.remove('hidden');
+                showNotification(`Welcome, Architect ${gameState.character.name}! Your quest begins. 🚀`, 'success');
+                // Automatically complete Quest 1 as it's the "start adventure"
+                // This is a design choice to immediately give the first badge and move to the next quest.
+                setTimeout(() => {
+                    completeQuest(1);
+                }, 1000); // Give a moment for the welcome message to be seen
             }
         });
 
         // Game Functions
         function updateUI() {
-            document.getElementById('currentXP').textContent = gameState.xp;
-            document.getElementById('playerLevel').textContent = gameState.level;
+            currentXP.textContent = gameState.xp;
+            playerLevel.textContent = gameState.level;
             
-            const maxXP = gameState.level * 100;
-            document.getElementById('maxXP').textContent = maxXP;
+            const requiredXP = gameState.level * 100; // XP needed for next level
+            maxXP.textContent = requiredXP;
             
-            const xpPercentage = (gameState.xp / maxXP) * 100;
-            document.getElementById('xpFill').style.width = xpPercentage + '%';
+            const xpPercentage = (gameState.xp / requiredXP) * 100;
+            xpFill.style.width = xpPercentage + '%';
             
             // Update quest nodes
             for (let i = 1; i <= 5; i++) {
                 const questNode = document.getElementById(`quest${i}`);
+                if (!questNode) continue; // Skip if element doesn't exist
+
                 const questStatus = questNode.querySelector('.quest-status');
                 
                 if (gameState.completedQuests.includes(i)) {
@@ -664,105 +1019,205 @@
                     questStatus.classList.remove('locked');
                     questStatus.classList.add('completed');
                     questStatus.textContent = '✓';
+                    // Disable buttons in completed quests
+                    const buttons = questNode.querySelectorAll('.cta-button, .activity-card');
+                    buttons.forEach(btn => btn.disabled = true);
                 } else if (i === gameState.currentQuest) {
                     questNode.classList.remove('locked', 'completed');
                     questNode.classList.add('active');
+                    questStatus.classList.remove('completed', 'locked'); // Ensure no conflicting classes
+                    questStatus.textContent = '🔒'; // Show lock for active but not yet completed
+                    // Enable buttons in active quest
+                    const buttons = questNode.querySelectorAll('.cta-button, .activity-card');
+                    buttons.forEach(btn => btn.disabled = false);
                 } else if (i > gameState.currentQuest) {
+                    questNode.classList.remove('active', 'completed');
                     questNode.classList.add('locked');
+                    questStatus.classList.remove('completed');
+                    questStatus.classList.add('locked');
+                    questStatus.textContent = '🔒';
+                    // Disable buttons in locked quests
+                    const buttons = questNode.querySelectorAll('.cta-button, .activity-card');
+                    buttons.forEach(btn => btn.disabled = true);
                 }
             }
+
+            // Update badges display
+            badgesContainer.innerHTML = ''; // Clear existing badges
+            const allBadges = [
+                { id: 'badge1', icon: '🏁', name: 'Initiate Protocol', description: 'Completed your first mission.' },
+                { id: 'badge2', icon: '📝', name: 'Ace a Test - Prompt Library', description: 'Mastered the art of AI prompting for tests.' },
+                { id: 'badge3', icon: '🛠️', name: 'Ace a Test - Study Smarter', description: 'Deployed advanced AI tools for efficient studying.' },
+                { id: 'badge4', icon: '⚔️', name: 'Ace a Test - Test Yourself', description: 'Conquered knowledge combat simulations.' },
+                { id: 'badge5', icon: '🏆', name: 'Ace a Test - Platinum Pathway', description: 'Completed the entire Ace a Test pathway.', isPlatinum: true }
+            ];
+
+            allBadges.forEach(badgeData => {
+                const badgeElement = document.createElement('div');
+                badgeElement.id = badgeData.id;
+                // Apply 'earned' or 'locked' based on state
+                let classes = `badge ${gameState.badges.includes(badgeData.id) ? 'earned' : 'locked'}`;
+                // Apply 'platinum-earned' specifically if it's the platinum badge and earned
+                if (badgeData.isPlatinum && gameState.badges.includes(badgeData.id)) {
+                    classes += ' platinum-earned';
+                }
+                badgeElement.className = classes;
+                badgeElement.title = badgeData.name + ': ' + badgeData.description; // Tooltip
+                badgeElement.innerHTML = badgeData.icon;
+                badgesContainer.appendChild(badgeElement);
+            });
         }
 
         function addXP(amount) {
             gameState.xp += amount;
-            const maxXP = gameState.level * 100;
+            const requiredXP = gameState.level * 100;
             
-            if (gameState.xp >= maxXP) {
+            if (gameState.xp >= requiredXP) {
                 gameState.level++;
-                gameState.xp = 0;
-                showNotification(`🎉 Level Up! You're now level ${gameState.level}!`);
+                gameState.xp -= requiredXP; // Carry over excess XP
+                showNotification(`🎉 LEVEL UP! You're now a Level ${gameState.level} Architect!`, 'success');
             }
-            
             updateUI();
         }
 
-        function earnBadge(badgeId, name) {
+        function earnBadge(badgeId, name, description) {
             if (!gameState.badges.includes(badgeId)) {
                 gameState.badges.push(badgeId);
-                const badge = document.getElementById(badgeId);
-                badge.classList.remove('locked');
-                badge.classList.add('earned');
-                showNotification(`🏆 Badge Earned: ${name}!`);
+                showNotification(`🏆 BADGE UNLOCKED: ${name}!`, 'success');
+                
+                // Trigger pop animation on the newly earned badge
+                // We need to wait for updateUI to render the badge, then animate it.
+                setTimeout(() => {
+                    updateUI(); // Re-render badges to show new one and apply classes
+                    const earnedBadgeElement = document.getElementById(badgeId);
+                    if (earnedBadgeElement) {
+                        earnedBadgeElement.classList.add('pop-animation');
+                        // Remove the animation class after it completes so it can be re-triggered
+                        earnedBadgeElement.addEventListener('animationend', () => {
+                            earnedBadgeElement.classList.remove('pop-animation');
+                        }, { once: true });
+                    }
+                }, 100); // Small delay to ensure badge is rendered
             }
         }
 
         function completeQuest(questNumber) {
-            if (!gameState.completedQuests.includes(questNumber)) {
+            if (!gameState.completedQuests.includes(questNumber) && questNumber <= gameState.currentQuest) {
                 gameState.completedQuests.push(questNumber);
-                gameState.currentQuest = questNumber + 1;
                 
-                // Award XP and badges
-                const xpRewards = [50, 100, 150, 200, 500];
-                addXP(xpRewards[questNumber - 1]);
-                
-                if (questNumber === 1) earnBadge('badge1', 'First Steps');
-                if (questNumber === 2) earnBadge('badge2', 'Prompt Master');
-                if (questNumber === 3) earnBadge('badge3', 'Tool Explorer');
-                if (questNumber === 4) earnBadge('badge4', 'Practice Pro');
-                if (questNumber === 5) earnBadge('badge5', 'AI Champion');
+                // Award XP and badges based on quest number
+                const xpRewards = {
+                    1: 50,
+                    2: 100,
+                    3: 150,
+                    4: 200,
+                    5: 500
+                };
+                addXP(xpRewards[questNumber]);
+
+                // Award specific badges
+                switch (questNumber) {
+                    case 1: earnBadge('badge1', 'Initiate Protocol', 'Completed your first mission.'); break;
+                    case 2: earnBadge('badge2', 'Ace a Test - Prompt Library', 'Mastered the art of AI prompting for tests.'); break;
+                    case 3: earnBadge('badge3', 'Ace a Test - Study Smarter', 'Deployed advanced AI tools for efficient studying.'); break;
+                    case 4: earnBadge('badge4', 'Ace a Test - Test Yourself', 'Conquered knowledge combat simulations.'); break;
+                    case 5: earnBadge('badge5', 'Ace a Test - Platinum Pathway', 'Completed the entire Ace a Test pathway.'); break;
+                }
+
+                // Advance to the next quest
+                if (questNumber < 5) {
+                    gameState.currentQuest = questNumber + 1;
+                    showNotification(`MISSION ${questNumber} COMPLETE! Proceeding to next objective.`, 'success');
+                } else {
+                    showNotification(`ALL MISSIONS COMPLETE! You are the ULTIMATE DIGITAL ARCHITECT!`, 'success');
+                }
                 
                 updateUI();
-                showNotification(`Quest ${questNumber} completed! 🎉`);
+            } else if (gameState.completedQuests.includes(questNumber)) {
+                showNotification(`MISSION ${questNumber} already completed, Architect.`, 'info');
+            } else {
+                showNotification(`MISSION ${questNumber} is locked. Complete previous missions first.`, 'warning');
             }
         }
 
         function playPromptGame(type) {
-            const prompts = {
-                core: "Explain quantum physics in simple terms with 3 examples",
-                timeline: "Create a 2-week study plan for calculus",
-                practice: "Generate 5 practice problems for algebra"
+            if (gameState.currentQuest !== 2 || gameState.completedQuests.includes(2)) {
+                showNotification('This activity is not available or already completed.', 'warning');
+                return;
+            }
+            const promptTypes = {
+                core: "Core Concepts prompts",
+                timeline: "Study Timelines prompts",
+                practice: "Practice Methods prompts"
             };
             
-            showNotification(`🎮 Prompt Game: "${prompts[type]}"`);
+            showNotification(`🎮 Exploring ${promptTypes[type]}! Imagine using these in your LLM.`, 'info');
             setTimeout(() => {
                 completeQuest(2);
-            }, 2000);
+            }, 2500);
         }
 
         function collectTool(toolName) {
+            if (gameState.currentQuest !== 3 || gameState.completedQuests.includes(3)) {
+                showNotification('This activity is not available or already completed.', 'warning');
+                return;
+            }
             if (!gameState.toolsCollected.includes(toolName)) {
                 gameState.toolsCollected.push(toolName);
-                showNotification(`🛠️ Tool Collected: ${toolName}!`);
+                showNotification(`🛠️ DEPLOYING TOOL: ${toolName}! Great choice for smarter studying.`, 'success');
                 
-                if (gameState.toolsCollected.length >= 3) {
+                // For simplicity, complete Quest 3 after "deploying" any tool.
+                setTimeout(() => {
                     completeQuest(3);
-                }
+                }, 1000);
+            } else {
+                showNotification(`Tool ${toolName} already deployed.`, 'info');
             }
         }
 
-        function startBattle(battleType) {
-            showNotification(`⚔️ Starting ${battleType} battle!`);
+        function startBattle(toolName) {
+            if (gameState.currentQuest !== 4 || gameState.completedQuests.includes(4)) {
+                showNotification('This activity is not available or already completed.', 'warning');
+                return;
+            }
+            showNotification(`⚔️ INITIATING TEST SIMULATION with ${toolName}! Prepare to prove your knowledge.`, 'info');
             setTimeout(() => {
                 completeQuest(4);
-            }, 2000);
+            }, 2500);
         }
 
         function claimReward() {
-            showNotification('🎉 Congratulations! You are now an AI Study Champion!');
+            if (gameState.currentQuest !== 5 || gameState.completedQuests.includes(5)) {
+                showNotification('No reward to claim yet, Architect. Complete all missions!', 'warning');
+                return;
+            }
+            showNotification('🎉 PATHWAY COMPLETE! You are now an ACE A TEST DIGITAL CHAMPION!', 'success');
             completeQuest(5);
         }
 
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
+        function showNotification(message, type = 'info') {
             notification.textContent = message;
-            notification.classList.add('show');
+            notification.className = 'notification show'; // Reset classes
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(90deg, #008000, #00cc00)';
+                notification.style.borderColor = '#00ff00';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(90deg, #8b0000, #cc0000)';
+                notification.style.borderColor = '#ff0000';
+            } else if (type === 'warning') {
+                notification.style.background = 'linear-gradient(90deg, #ff8c00, #ffa500)';
+                notification.style.borderColor = '#ffd700';
+            } else { // info
+                notification.style.background = 'linear-gradient(90deg, #007bff, #0056b3)';
+                notification.style.borderColor = '#00bfff';
+            }
             
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
         }
 
-        // Initialize game
+        // Initial UI update on script load
         updateUI();
     </script>
 </body>
